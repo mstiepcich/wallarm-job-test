@@ -1,29 +1,29 @@
 #!/bin/bash
 set -e
 
-# Actualizar paquetes
+# Update packets
 apt-get update -y
 apt-get upgrade -y
 
-# Instalar dependencias para Docker
+# Installing Docker dependencies
 apt-get install -y ca-certificates curl gnupg lsb-release
 
-# Agregar clave GPG y repo de Docker
+# Adding GPG key and Docker repository
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-# Instalar Docker y Docker Compose plugin
+# Install Docker and docker-compose plugin
 apt-get update -y
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
-# Permitir usar Docker sin sudo
+# Allow using docker without sudo
 usermod -aG docker ubuntu
 
-# Instalar Nginx
+# Install Nginx
 apt-get install -y nginx
 
-# Configuración default personalizada de Nginx
+# Custom default config for Nginx
 cat <<EOC | tee /etc/nginx/sites-available/default
 server {
     listen 80 default_server;
@@ -38,15 +38,15 @@ server {
 }
 EOC
 
-# Habilitar y arrancar Nginx
+# Enable and Start Nginx
 systemctl enable nginx
 systemctl restart nginx
 
-# Crear directorio para docker-compose
+# Create directory for docker-compose
 mkdir -p /home/ubuntu/wallarm
 cd /home/ubuntu/wallarm
 
-# Crear docker-compose.yml
+# Create docker-compose.yml
 cat <<EOC > docker-compose.yml
 version: '3.9'
 services:
@@ -69,5 +69,5 @@ services:
       - "80"
 EOC
 
-# Levantar contenedores en background
+# Start container in the background
 docker compose up -d

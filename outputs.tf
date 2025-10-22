@@ -4,6 +4,6 @@ output "instance_public_ip" {
 }
 
 output "ssh_command" {
-  value       = "ssh -i \"C:\\Users\\Mariano\\Code\\Wallarm-Job-Test\\mariano.stiepich.pem\" ubuntu@${aws_instance.ubuntu_server.public_ip}"
+  value       = "ssh -i \"Your key location\" ubuntu@${aws_instance.ubuntu_server.public_ip}"
   description = "SSH command to connect to the server"
 }
