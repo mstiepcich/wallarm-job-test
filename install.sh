@@ -23,7 +23,7 @@ usermod -aG docker ubuntu
 # Instalar Nginx
 apt-get install -y nginx
 
-# Configuración default personalizada
+# Configuración default personalizada de Nginx
 cat <<EOC | tee /etc/nginx/sites-available/default
 server {
     listen 80 default_server;
@@ -41,3 +41,33 @@ EOC
 # Habilitar y arrancar Nginx
 systemctl enable nginx
 systemctl restart nginx
+
+# Crear directorio para docker-compose
+mkdir -p /home/ubuntu/wallarm
+cd /home/ubuntu/wallarm
+
+# Crear docker-compose.yml
+cat <<EOC > docker-compose.yml
+version: '3.9'
+services:
+  wallarm:
+    image: wallarm/node:6.6.2-wstore-health-check
+    environment:
+      - WALLARM_API_TOKEN=YFp07PdpBjLsq+GPWB7wQF/ax4WdwfQeNQET6s12AtbdmJHEL6BCNIEmWg4UQwl8
+      - WALLARM_LABELS=group=mariano-test
+      - WALLARM_API_HOST=audit.api.wallarm.com
+      - NGINX_BACKEND=httpbin:80
+      - WALLARM_MODE=monitoring
+    ports:
+      - "8080:80"
+    depends_on:
+      - httpbin
+
+  httpbin:
+    image: kennethreitz/httpbin
+    expose:
+      - "80"
+EOC
+
+# Levantar contenedores en background
+docker compose up -d
