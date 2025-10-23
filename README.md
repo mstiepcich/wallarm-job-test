@@ -14,3 +14,4 @@ terraform destroy
 
 the values will be prompted again. Is not very confortable but it is faster than asking for the creation of a .tfvars file with the data
 
+The script that runs the attack tests has the IP of my private lab hardcoded. You will have to replace it if you want to use that.
