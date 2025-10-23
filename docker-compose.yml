@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   wallarm:
     image: wallarm/node:6.6.2-wstore-health-check
@@ -8,6 +7,8 @@ services:
       - WALLARM_API_HOST=audit.api.wallarm.com
       - NGINX_BACKEND=httpbin:80
       - WALLARM_MODE=monitoring
+    volumes:
+      - ./default:/etc/nginx/http.d/default.conf
     ports:
       - "8080:80"
     depends_on:

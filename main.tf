@@ -6,5 +6,9 @@ resource "aws_instance" "ubuntu_server" {
   key_name                    = var.key_name
   associate_public_ip_address = true
 
-  user_data = templatefile("${path.module}/install.sh", {})
+  user_data = templatefile("${path.module}/install.sh", {
+    wallarm_api_token = var.wallarm_api_token
+    wallarm_api_host  = var.wallarm_api_host
+    wallarm_mode = var.wallarm_mode
+  })
 }

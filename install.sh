@@ -33,6 +33,7 @@ server {
         proxy_pass http://127.0.0.1:8080;   # send traffic to the Wallarm container
         proxy_set_header Host \$host;
         proxy_set_header X-Forwarded-For \$remote_addr;
+        #Add a custom header to identify the traffic passes through here
         add_header X-Proxy-Layer "ubuntu-nginx";
     }
 }
@@ -46,6 +47,38 @@ systemctl restart nginx
 mkdir -p /home/ubuntu/wallarm
 cd /home/ubuntu/wallarm
 
+# Create the default config file for wallarm nginx
+cat <<EOC > default
+#
+# by default, proxy all to 127.0.0.1:8080
+#
+
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
+        #listen 443 ssl;
+
+        server_name localhost;
+
+        #ssl_certificate cert.pem;
+        #ssl_certificate_key cert.key;
+
+        root /usr/share/nginx/html;
+
+        index index.html index.htm;
+
+        wallarm_mode monitoring;
+
+        location / {
+                proxy_pass http://httpbin:80;
+                include proxy_params;
+
+                #Add custom header in all responses to identify it passes through here
+                add_header Wallarm-Container "true" always;
+        }
+}
+EOC
+
 # Create docker-compose.yml
 cat <<EOC > docker-compose.yml
 version: '3.9'
@@ -53,11 +86,13 @@ services:
   wallarm:
     image: wallarm/node:6.6.2-wstore-health-check
     environment:
-      - WALLARM_API_TOKEN=YFp07PdpBjLsq+GPWB7wQF/ax4WdwfQeNQET6s12AtbdmJHEL6BCNIEmWg4UQwl8
+      - WALLARM_API_TOKEN=${wallarm_api_token}
       - WALLARM_LABELS=group=mariano-test
-      - WALLARM_API_HOST=audit.api.wallarm.com
+      - WALLARM_API_HOST=${wallarm_api_host}
       - NGINX_BACKEND=httpbin:80
-      - WALLARM_MODE=monitoring
+      - WALLARM_MODE=${wallarm_mode}
+    volumes:
+      - ./default:/etc/nginx/http.d/default.conf
     ports:
       - "8080:80"
     depends_on:

@@ -24,7 +24,7 @@ resource "aws_security_group" "ubuntu_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["186.22.56.194/32"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
